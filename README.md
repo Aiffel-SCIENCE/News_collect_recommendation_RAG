@@ -33,17 +33,17 @@ LLM과 RAG(Retrieval-Augmented Generation) 구조를 활용하여 사용자가 �
 AIGEN_SCIENCE_RAG/
 ├── app/                  # 메인 앱
 │   ├── api/              # API 라우터
-│   ├── services/         # 수집, 필터링, 요약 로직
+│   ├── services/         # 기능들
 │   ├── workers/          # Celery 태스크
-│   ├── models/           # Pydantic 모델
+│   ├── models/           # 모델
 │   ├── db/               # MongoDB, vectorDB 연결
 │   └── core/             # 설정, 유틸리티
 │
 ├── tests/                # 테스트 코드
 ├── .env.example          # 환경 변수 템플릿 (API 키 등)
 ├── .gitignore            # Git 무시 설정
-├── docker-compose.yml    # Redis, Mongo, API 포함 실행
+├── docker-compose.yml    # docker 파일 설정
 ├── requirements.txt      # 패키지 목록
 ├── README.md             # 프로젝트 설명
-└── main.py               # FastAPI 진입점
+└── main.py               # main.py
 ```

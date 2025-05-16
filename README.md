@@ -29,20 +29,4 @@ LLM과 RAG(Retrieval-Augmented Generation) 구조를 활용하여 사용자가 �
 ---
 
 ## 🗂 폴더 구조 (예정)
-news-ai-project-template/
-├── app/
-│   ├── api/              # API 라우터
-│   ├── services/         # 수집, 필터링, 요약 등 로직
-│   ├── workers/          # Celery 태스크
-│   ├── models/           # models
-│   ├── db/               # MongoDB, vectorDB 연결 및 함수
-│   └── core/             # 설정, 유틸리티
-│
-├── tests/                # 테스트 코드
-├── .env.example          # 환경변수 템플릿(API 키들 여기에 저장?)
-├── .gitignore            # 기본 Git 무시 설정
-├── docker-compose.yml    # Redis, MongoDB, FastAPI 포함 실행
-├── requirements.txt      # 버전, 필요한 패키지들
-├── README.md             # 프로젝트 설명
-└── main.py               # main.py
-
+<pre><code>## 📁 폴더 구조 (예정) news-ai-project-template/ ├── app/ # 메인 앱 │ ├── api/ # API 라우터 │ ├── services/ # 수집, 필터링, 요약 로직 │ ├── workers/ # Celery 태스크 │ ├── models/ # Pydantic 모델 │ ├── db/ # MongoDB, vectorDB 연결 │ └── core/ # 설정, 유틸리티 │ ├── tests/ # 테스트 코드 ├── .env.example # 환경 변수 템플릿 (API 키 등) ├── .gitignore # Git 무시 설정 ├── docker-compose.yml # Redis, Mongo, API 포함 실행 ├── requirements.txt # 패키지 목록 ├── README.md # 프로젝트 설명 └── main.py # FastAPI 진입점 </code></pre>

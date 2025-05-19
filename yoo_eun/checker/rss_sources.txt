@@ -1,0 +1,5 @@
+https://news.google.com/news/rss/?ned=kr&gl=KR&hl=ko
+https://www.hitnews.co.kr/rss/allArticle.xml
+https://endpts.com/feed/
+https://www.fiercebiotech.com/rss/biotech/xml
+https://www.biopharmadive.com/feeds/news/ 

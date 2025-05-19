@@ -1,0 +1,14 @@
+https://openapi.naver.com/v1/search/news.json?query=%EB%B0%94%EC%9D%B4%EC%98%A4&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%EC%A0%9C%EC%95%BD&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%EC%8B%A0%EC%95%BD&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%EC%9E%84%EC%83%81&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%EC%8B%9C%ED%97%98&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%EB%B0%B1%EC%8B%A0&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%EC%9C%A0%EC%A0%84%EC%9E%90&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%EC%B9%98%EB%A3%8C&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%EC%84%B8%ED%8F%AC&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%ED%95%AD%EC%95%94%EC%A0%9C&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%ED%9D%AC%EA%B7%80%EC%9D%98%EC%95%BD%ED%92%88&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%EC%9C%A0%EC%A0%84%EC%B2%B4&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%EC%9D%98%EC%95%BD%ED%92%88&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=%EC%8B%9D%EC%95%BD%EC%B2%98&display=100&sort=date

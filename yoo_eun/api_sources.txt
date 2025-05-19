@@ -1,2 +1,0 @@
-https://api.thenewsapi.com/v1/news/top?api_token=vZqyHry0ZAznmlq0izkX1T8I5Ji3LYzK6Y26llfi&locale=kr
-https://gnews.io/api/v4/top-headlines?token=e37a5bc954c8c39591f81958d7832217&lang=ko&country=kr

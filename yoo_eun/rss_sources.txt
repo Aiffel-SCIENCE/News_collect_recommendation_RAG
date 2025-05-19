@@ -1,2 +1,0 @@
-http://media.daum.net/rss/today/primary/all/rss2.xml
-https://news.google.com/news/rss/?ned=kr&gl=KR&hl=ko

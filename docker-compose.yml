@@ -1,0 +1,296 @@
+services:
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  llm-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.llm
+    container_name: llm-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    env_file:
+      - .env
+
+  news-recommendation-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.news
+    container_name: news-recommendation-api
+    ports:
+      - "8001:8001"
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    command: python src/app/news_recommendation.py
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    env_file:
+      - .env
+
+  news-article-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.news
+    container_name: news-article-api
+    ports:
+      - "8002:8002"
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    command: python src/app/news_article_api.py
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    env_file:
+      - .env
+
+  rag-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.rag
+    container_name: rag-api
+    ports:
+      - "8010:8010"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    command: python src/app/rag_api.py
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8010/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    env_file:
+      - .env
+
+  pdf-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.pdf
+    container_name: pdf-api
+    ports:
+      - "8013:8013"
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+      - ./src:/app/src
+    command: python src/app/pdf_api.py
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8013/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    env_file:
+      - .env
+
+  aigen-test-container:
+    build:
+      context: .
+      dockerfile: Dockerfile.news
+    container_name: aigen_science_test
+    command: python tests/main_test.py
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      llm-api:
+        condition: service_started
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+    restart: "no"
+    env_file:
+      - .env
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    command: celery -A src.celery_app worker --loglevel=info --concurrency=4 --pool=threads -Q celery,default
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      llm-api:
+        condition: service_healthy
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    env_file:
+      - .env
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    command: celery -A src.celery_app beat --loglevel=info
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+      - celerybeat-schedule:/var/lib/celerybeat
+    restart: unless-stopped
+    env_file:
+      - .env
+
+  notification-system:
+    build:
+      context: .
+      dockerfile: Dockerfile.news
+    container_name: notification-system
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      news-recommendation-api:
+        condition: service_started
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+      - ./logs:/app/logs
+    command: python simple_notification_system.py
+    restart: unless-stopped
+    env_file:
+      - .env
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+        - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+        - NEXT_PUBLIC_SUPABASE_REDIRECT_URL=${NEXT_PUBLIC_SUPABASE_REDIRECT_URL}
+        - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+    container_name: aigen_science-frontend-1
+    ports:
+      - "3000:3000"
+    depends_on:
+      llm-api:
+        condition: service_healthy
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - NEXT_PUBLIC_SUPABASE_REDIRECT_URL=${NEXT_PUBLIC_SUPABASE_REDIRECT_URL}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - RAG_API_URL=http://rag-api:8010/rag-chat
+      - OPENAI_API_KEY=
+    env_file:
+      - ./frontend/.env.local
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  mongo_data:
+  celerybeat-schedule:
+
+networks:
+  default:
+    name: aigen_science_default

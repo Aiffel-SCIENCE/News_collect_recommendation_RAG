@@ -1,0 +1,10 @@
+https://openapi.naver.com/v1/search/news.json?query=바이오&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=제약&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=신약&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=임상&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=여당&display=100&sort=date
+https://openapi.naver.com/v1/search/news.json?query=폭염&display=100&sort=date
+\
+
+https://api.thenewsapi.com/v1/news/top?api_token=vZqyHry0ZAznmlq0izkX1T8I5Ji3LYzK6Y26llfi&locale=kr
+https://gnews.io/api/v4/top-headlines?token=e37a5bc954c8c39591f81958d7832217&lang=ko&country=kr

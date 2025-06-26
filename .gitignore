@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# 데이터 파일
+data/raw/
+
+# 환경 변수 파일 (민감한 정보 포함)
+.env
+.env.local
+.env.production
+
+# 기타 IDE 설정 등 (선택사항)
+.vscode/
+config/config.yaml
+.env.backup
+config/config.yaml
+.env

@@ -1,0 +1,16 @@
+[Unit]
+Description=AIGEN Science Notification System
+After=network.target
+
+[Service]
+Type=simple
+User=br631533333333_gmail_com
+WorkingDirectory=/home/br631533333333_gmail_com/Aigen_science
+ExecStart=/usr/bin/python3 /home/br631533333333_gmail_com/Aigen_science/simple_notification_system.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target 

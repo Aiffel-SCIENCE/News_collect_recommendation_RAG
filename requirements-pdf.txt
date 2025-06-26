@@ -1,0 +1,17 @@
+# PDF 처리
+PyPDF2>=3.0.0
+reportlab>=4.0.0
+
+# LangChain (텍스트 분할용)
+langchain>=0.1.0
+langchain-core>=0.1.0
+
+# OpenAI (임베딩 및 분석용)
+openai>=1.0.0
+
+# MongoDB 연결
+pymongo>=4.5.0
+certifi>=2023.0.0
+
+# Pinecone (벡터 DB)
+pinecone>=2.2.0 

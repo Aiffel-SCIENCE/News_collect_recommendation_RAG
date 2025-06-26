@@ -1,0 +1,35 @@
+# 베이스 이미지 - 공통 패키지만 포함
+FROM python:3.12-slim
+
+# 시스템 패키지 업데이트 및 기본 패키지 설치
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    wget \
+    git \
+    libgomp1 \
+    libfreetype6-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# Python 환경 변수 설정
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# pip 업그레이드
+RUN pip install --upgrade pip
+
+# 공통 패키지만 설치
+COPY requirements-base.txt .
+RUN pip install --no-cache-dir -r requirements-base.txt
+
+# 소스 코드 복사
+COPY . /app 

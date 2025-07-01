@@ -17,8 +17,8 @@ _project_root = os.path.dirname(os.path.dirname(_current_file_path))
 if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
 
-from src.config_loader.settings import SETTINGS
-from src.db.vector_db import PineconeDB
+from ..config_loader.settings import SETTINGS
+from ..db.vector_db import PineconeDB
 from pymongo import MongoClient
 import certifi
 from openai import OpenAI

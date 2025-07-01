@@ -3,10 +3,10 @@ from typing import TypedDict, List, Optional, Tuple
 from langgraph.graph import StateGraph, END
 from langchain_core.messages import BaseMessage, HumanMessage
 from langchain_openai import ChatOpenAI
-from config_loader.settings import SETTINGS
-from db.vector_db import PineconeDB
-from web_search import perform_web_search
-from advanced_retrieval import AdvancedRetrieval
+from src.config_loader.settings import SETTINGS
+from src.db.vector_db import PineconeDB
+from ..services.web_search import perform_web_search
+from ..services.advanced_retrieval import AdvancedRetrieval
 from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM, AutoModelForSequenceClassification
 import torch
 from collections import defaultdict
@@ -55,10 +55,10 @@ except Exception as e:
 
 # --- Supabase 초기화 ---
 supabase: Optional[Client] = None
-if SETTINGS.get('supabase_url') and SETTINGS.get('supabase_key'):
+if SETTINGS.get('SUPABASE_URL') and SETTINGS.get('SUPABASE_ANON_KEY'):
     try:
         supabase = create_client(
-            SETTINGS['supabase_url'], SETTINGS['supabase_key']
+            SETTINGS['SUPABASE_URL'], SETTINGS['SUPABASE_ANON_KEY']
         )
     except Exception:
         supabase = None
@@ -250,6 +250,7 @@ def rerank_chunks(state: GraphState) -> dict:
 
 def generate_final_answer(state: GraphState) -> dict:
     # 프롬프트 구성
+    chunks_text = "\n\n".join(state['reranked_chunks'])
     prompt_text = f"""
 당신은 신뢰할 수 있는 문서를 기반으로 전문적이고 친절한 한국어 답변을 제공하는 AI입니다.
 
@@ -266,7 +267,7 @@ def generate_final_answer(state: GraphState) -> dict:
    - Markdown 형식 (`##`, `**`, `-`)은 절대 사용하지 말고, 대신 자연스러운 강조 표현(예: "특히", "중요하게는") 등을 사용합니다.
 
 [참고 정보]
-{ "\n\n".join(state['reranked_chunks']) }
+{chunks_text}
 
 [질문]
 { state['rewritten_query'] }

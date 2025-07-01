@@ -14,7 +14,7 @@ import sys
 
 # 프로젝트 경로 추가
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from config_loader.settings import SETTINGS
+from ..config_loader.settings import SETTINGS
 
 class WebSearchEngine:
     """웹검색 엔진 클래스 - 네이버 웹 문서 검색 API 사용"""

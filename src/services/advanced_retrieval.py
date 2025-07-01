@@ -13,8 +13,8 @@ import re
 
 # 프로젝트 경로 추가
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from config_loader.settings import SETTINGS
-from db.vector_db import PineconeDB
+from ..config_loader.settings import SETTINGS
+from ..db.vector_db import PineconeDB
 
 class AdvancedRetrieval:
     """고급 검색 시스템"""

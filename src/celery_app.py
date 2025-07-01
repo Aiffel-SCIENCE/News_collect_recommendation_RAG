@@ -15,11 +15,8 @@ if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
 print(f"[{datetime.now()}] Project root configured: {_project_root}")
 
-# src.config_loader.settings 에서 환경 변수를 로드하도록 가정
-# SETTINGS 객체를 직접 사용하거나, 필요한 변수를 os.environ.get으로 직접 가져옵니다.
-# 여기서는 os.environ.get을 직접 사용하는 방식으로 변경하겠습니다.
-# 기존 SETTINGS 임포트가 있다면 그대로 두거나 제거할 수 있습니다.
-# from src.config_loader.settings import SETTINGS # 필요한 경우 유지
+# SETTINGS 임포트 추가
+from src.config_loader.settings import SETTINGS
 
 # news_collector 모듈 임포트 제거 (순환 참조 방지)
 # try:
@@ -48,10 +45,10 @@ print(f"[{datetime.now()}] Attempting GLOBAL (module-level) resource initializat
 
 try:
     # MongoDB 초기화
-    # .env 파일에서 MONGO_URI를 읽어옵니다.
-    mongo_uri = os.environ.get('MONGO_URI')
+    # SETTINGS에서 MONGO_URI를 읽어옵니다.
+    mongo_uri = SETTINGS.get('MONGO_URI')
     if not mongo_uri:
-        raise ValueError("MONGO_URI environment variable not set.")
+        raise ValueError("MONGO_URI not set in config.yaml or environment variables.")
     
     # SSL/TLS 설정은 MongoDB URI에 포함될 수도 있고, certifi가 사용될 수도 있습니다.
     # 여기서는 certifi를 사용하여 CA 인증서를 지정하는 일반적인 방법을 보여줍니다.
@@ -61,9 +58,9 @@ try:
     worker_resources['mongo_client'] = mongo_client
     
     # MongoDB 컬렉션들 초기화
-    mongo_db_name = os.environ.get('MONGO_DB_NAME', 'newsdb')
-    mongo_articles_collection_name = os.environ.get('MONGO_ARTICLES_COLLECTION_NAME', 'articles')
-    mongo_blacklist_collection_name = os.environ.get('MONGO_BLACKLIST_COLLECTION_NAME', 'Filter3')
+    mongo_db_name = SETTINGS.get('MONGO_DB_NAME', 'newsdb')
+    mongo_articles_collection_name = SETTINGS.get('MONGO_ARTICLES_COLLECTION_NAME', 'articles')
+    mongo_blacklist_collection_name = SETTINGS.get('MONGO_BLACKLIST_COLLECTION_NAME', 'Filter3')
     
     mongo_db = mongo_client[mongo_db_name]
     articles_collection = mongo_db[mongo_articles_collection_name]
@@ -76,35 +73,35 @@ try:
     print(f"[{datetime.now()}] MongoDB collections initialized: {mongo_articles_collection_name}, {mongo_blacklist_collection_name}")
 
     # PineconeDB 초기화
-    # .env 파일에서 PINECONE_API_KEY, PINECONE_ENVIRONMENT, PINECONE_INDEX_NAME을 읽어옵니다.
-    pinecone_api_key = os.environ.get('PINECONE_API_KEY')
-    pinecone_environment = os.environ.get('PINECONE_ENVIRONMENT', 'us-east-1') # 기본값 설정
-    pinecone_index_name = os.environ.get('PINECONE_INDEX_NAME', 'news-embedding-3') # 기본값 설정
+    # SETTINGS에서 Pinecone 설정을 읽어옵니다.
+    pinecone_api_key = SETTINGS.get('PINECONE_API_KEY')
+    pinecone_environment = SETTINGS.get('PINECONE_ENVIRONMENT', 'us-east-1')
+    pinecone_index_name = SETTINGS.get('PINECONE_INDEX_NAME', 'news-embedding-3')
     
     if not pinecone_api_key:
-        raise ValueError("PINECONE_API_KEY environment variable not set.")
+        raise ValueError("PINECONE_API_KEY not set in config.yaml or environment variables.")
 
     pinecone_db = PineconeDB()
     worker_resources['pinecone_manager'] = pinecone_db
     print(f"[{datetime.now()}] PineconeDB client initialized successfully.")
 
     # OpenAI 클라이언트 초기화
-    # .env 파일에서 OPENAI_API_KEY를 읽어옵니다.
-    openai_api_key = os.environ.get('OPENAI_API_KEY')
+    # SETTINGS에서 OPENAI_API_KEY를 읽어옵니다.
+    openai_api_key = SETTINGS.get('OPENAI_API_KEY')
     if not openai_api_key:
-        raise ValueError("OPENAI_API_KEY environment variable not set.")
+        raise ValueError("OPENAI_API_KEY not set in config.yaml or environment variables.")
     
     openai_client = OpenAI(api_key=openai_api_key)
     worker_resources['openai_client'] = openai_client
     print(f"[{datetime.now()}] OpenAI client initialized successfully.")
 
-    # 다른 API 키들도 os.environ.get으로 가져와서 필요한 곳에 전달하거나 전역으로 설정할 수 있습니다.
-    worker_resources['DART_API_KEY'] = os.environ.get('DART_API_KEY')
-    worker_resources['NAVER_CLIENT_ID'] = os.environ.get('NAVER_CLIENT_ID')
-    worker_resources['NAVER_CLIENT_SECRET'] = os.environ.get('NAVER_CLIENT_SECRET')
+    # 다른 API 키들도 SETTINGS에서 가져와서 필요한 곳에 전달하거나 전역으로 설정할 수 있습니다.
+    worker_resources['DART_API_KEY'] = SETTINGS.get('DART_API_KEY')
+    worker_resources['NAVER_CLIENT_ID'] = SETTINGS.get('NAVER_CLIENT_ID')
+    worker_resources['NAVER_CLIENT_SECRET'] = SETTINGS.get('NAVER_CLIENT_SECRET')
     
     # 모델명들 추가
-    worker_resources['embedding_model_name'] = os.environ.get('SHARED_EMBEDDING_MODEL_NAME', 'text-embedding-3-small')
+    worker_resources['embedding_model_name'] = SETTINGS.get('SHARED_EMBEDDING_MODEL_NAME', 'text-embedding-3-small')
 
 except Exception as e:
     initialization_errors.append(f"Global resource initialization failed: {e}\n{traceback.format_exc()}")
@@ -112,10 +109,10 @@ except Exception as e:
     print(traceback.format_exc()) # 스택 트레이스 출력
 
 # Celery 앱 인스턴스 생성
-# CELERY_BROKER_URL과 CELERY_RESULT_BACKEND도 .env에서 가져오거나 기본값을 사용합니다.
+# SETTINGS에서 CELERY_BROKER_URL과 CELERY_RESULT_BACKEND를 가져옵니다.
 app = Celery('aigen_science',
-             broker=os.environ.get('CELERY_BROKER_URL', 'redis://redis:6379/0'),
-             backend=os.environ.get('CELERY_RESULT_BACKEND', 'redis://redis:6379/0'))
+             broker=SETTINGS.get('CELERY_BROKER_URL', 'redis://redis:6379/0'),
+             backend=SETTINGS.get('CELERY_RESULT_BACKEND', 'redis://redis:6379/0'))
 
 # Celery Beat 스케줄 설정 (여기가 핵심 변경 사항 중 하나)
 app.conf.beat_schedule = {
@@ -162,7 +159,7 @@ def collect_news_task():
         from src.news_collector import news_collector
         # news_collector.py의 main 함수를 호출합니다.
         # news_collector.main() 함수가 제대로 정의되어 있고,
-        # 이 함수 내에서 필요한 모든 환경 변수(DART, NAVER 등)를 os.environ.get()으로 읽도록 되어 있어야 합니다.
+        # 이 함수 내에서 필요한 모든 환경 변수(DART, NAVER 등)를 SETTINGS에서 읽도록 되어 있어야 합니다.
         news_collector.collect_all_data() 
         print(f"[{datetime.now()}] 뉴스 수집 태스크 완료.")
     except Exception as e:

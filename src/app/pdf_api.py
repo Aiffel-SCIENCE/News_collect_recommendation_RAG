@@ -24,7 +24,7 @@ _project_root = os.path.dirname(os.path.dirname(os.path.dirname(_current_file_pa
 if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
 
-from src.pdf_processor import PDFProcessor
+from ..services.pdf_processor import PDFProcessor
 
 # FastAPI 앱 인스턴스
 app = FastAPI(

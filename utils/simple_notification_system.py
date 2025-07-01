@@ -14,21 +14,12 @@ if _project_root not in sys.path:
 
 # 환경 변수 로드
 from dotenv import load_dotenv
-load_dotenv(dotenv_path=os.path.join(_project_root, ".env"))
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 # news_recommendation.py의 함수들 임포트
 from src.app.news_recommendation import extract_profile_keywords, extract_keywords_from_query
 
-# 환경 변수에서 API 키 로드
-BREVO_API_KEY = os.environ.get("BREVO_API_KEY")
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
-
-# API 키 검증
-if not BREVO_API_KEY:
-    print("⚠️  WARNING: BREVO_API_KEY가 설정되지 않았습니다. 이메일 알림이 비활성화됩니다.")
-if not SUPABASE_URL or not SUPABASE_KEY:
-    print("⚠️  WARNING: Supabase 설정이 완료되지 않았습니다. 데이터베이스 연결이 실패할 수 있습니다.")
+BREVO_API_KEY = os.environ.get('BREVO_API_KEY', '<your-brevo-api-key>')
 
 # Slack 메시지 전송 함수
 def send_slack_message(message: str, webhook_url: str):
@@ -44,16 +35,12 @@ import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 
 def send_brevo_email(to_email, subject, content):
-    if not BREVO_API_KEY:
-        print("❌ BREVO_API_KEY가 설정되지 않아 이메일을 전송할 수 없습니다.")
-        return
-        
     configuration = sib_api_v3_sdk.Configuration()
     configuration.api_key['api-key'] = BREVO_API_KEY
     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
     send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
         to=[{"email": to_email}],
-        sender={"name": "AIGEN Science", "email": "x9520207@gmail.com"},
+        sender={"name": "AIGEN Science", "email": os.environ.get('SENDER_EMAIL', 'noreply@aigen-science.com')},
         subject=subject,
         text_content=content
     )
@@ -100,8 +87,8 @@ def RAG(profile_context: str, notification_query: str = None):
             # 기본 쿼리
             query = "최신 과학 뉴스"
         
-        # 뉴스 추천 API 호출 (환경 변수에서 URL 로드)
-        recommendation_url = os.environ.get("NEWS_RECOMMENDATION_API_URL", "http://34.61.170.171:8001/recommendations")
+        # 뉴스 추천 API 호출 (환경 변수에서 URL 가져오기)
+        recommendation_url = os.environ.get('NEWS_RECOMMENDATION_API_URL', 'http://localhost:8001/recommendations')
         
         payload = {
             "query": query,
@@ -145,18 +132,11 @@ def RAG(profile_context: str, notification_query: str = None):
         else:
             return "오늘의 주요 과학 뉴스를 확인해보세요!"
 
-# Supabase 클라이언트 초기화
-if SUPABASE_URL and SUPABASE_KEY:
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-else:
-    supabase = None
-    print("⚠️  WARNING: Supabase 클라이언트가 초기화되지 않았습니다.")
+url: str = os.environ.get('SUPABASE_URL', '<your-supabase-url>')
+key: str = os.environ.get('SUPABASE_ANON_KEY', '<your-supabase-anon-key>')
+supabase: Client = create_client(url, key)
 
 def fetch_and_notify():
-    if not supabase:
-        print("❌ Supabase 클라이언트가 초기화되지 않아 알림을 전송할 수 없습니다.")
-        return
-        
     try:
         # 실제 profiles 테이블 구조에 맞게 조회
         response = (

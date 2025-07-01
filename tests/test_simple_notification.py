@@ -88,7 +88,7 @@ def test_api_connection():
         import requests
         
         # API 연결 테스트
-        test_url = "http://34.61.170.171:8001/recommendations"
+        test_url = os.environ.get('NEWS_RECOMMENDATION_API_URL', 'http://localhost:8001/recommendations')
         test_payload = {
             "query": "바이오 제약 뉴스",
             "profile_context": "바이오 제약 배고픔 빵 과자 세포",

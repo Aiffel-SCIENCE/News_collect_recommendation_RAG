@@ -1,8 +1,8 @@
 const { createClient } = require('@supabase/supabase-js')
 
 // Supabase 연결 정보
-const supabaseUrl = 'https://gtlxkigxfmlslvapgofz.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0bHhraWd4Zm1sc2x2YXBnb2Z6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyNDI5NTMsImV4cCI6MjA2MzgxODk1M30.bxL7mOvUkCXf3ns3sHw7_LBbuqd418kkpcqBJ99qudA'
+const supabaseUrl = process.env.SUPABASE_URL || '<your-supabase-url>'
+const supabaseKey = process.env.SUPABASE_ANON_KEY || '<your-supabase-anon-key>'
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 

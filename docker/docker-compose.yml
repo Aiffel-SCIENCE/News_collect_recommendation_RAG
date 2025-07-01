@@ -19,7 +19,7 @@ services:
       - mongo_data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_ROOT_PASSWORD=<your-mongo-password>
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 30s
@@ -28,8 +28,8 @@ services:
 
   llm-api:
     build:
-      context: .
-      dockerfile: Dockerfile.llm
+      context: ..
+      dockerfile: docker/Dockerfile.llm
     container_name: llm-api
     ports:
       - "8000:8000"
@@ -54,8 +54,8 @@ services:
 
   news-recommendation-api:
     build:
-      context: .
-      dockerfile: Dockerfile.news
+      context: ..
+      dockerfile: docker/Dockerfile.news
     container_name: news-recommendation-api
     ports:
       - "8001:8001"
@@ -82,8 +82,8 @@ services:
 
   news-article-api:
     build:
-      context: .
-      dockerfile: Dockerfile.news
+      context: ..
+      dockerfile: docker/Dockerfile.news
     container_name: news-article-api
     ports:
       - "8002:8002"
@@ -110,8 +110,8 @@ services:
 
   rag-api:
     build:
-      context: .
-      dockerfile: Dockerfile.rag
+      context: ..
+      dockerfile: docker/Dockerfile.rag
     container_name: rag-api
     ports:
       - "8010:8010"
@@ -144,9 +144,8 @@ services:
       - .env
 
   pdf-api:
-    build:
-      context: .
-      dockerfile: Dockerfile.pdf
+    context: ..
+    dockerfile: docker/Dockerfile.pdf
     container_name: pdf-api
     ports:
       - "8013:8013"
@@ -174,8 +173,8 @@ services:
 
   aigen-test-container:
     build:
-      context: .
-      dockerfile: Dockerfile.news
+      context: ..
+      dockerfile: docker/Dockerfile.news
     container_name: aigen_science_test
     command: python tests/main_test.py
     depends_on:
@@ -195,8 +194,8 @@ services:
 
   celery_worker:
     build:
-      context: .
-      dockerfile: Dockerfile.celery
+      context: ..
+      dockerfile: docker/Dockerfile.celery
     command: celery -A src.celery_app worker --loglevel=info --concurrency=4 --pool=threads -Q celery,default
     depends_on:
       redis:
@@ -215,8 +214,8 @@ services:
 
   celery_beat:
     build:
-      context: .
-      dockerfile: Dockerfile.celery
+      context: ..
+      dockerfile: docker/Dockerfile.celery
     command: celery -A src.celery_app beat --loglevel=info
     depends_on:
       redis:
@@ -232,8 +231,8 @@ services:
 
   notification-system:
     build:
-      context: .
-      dockerfile: Dockerfile.news
+      context: ..
+      dockerfile: docker/Dockerfile.news
     container_name: notification-system
     depends_on:
       redis:
@@ -255,7 +254,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ../frontend
       dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}

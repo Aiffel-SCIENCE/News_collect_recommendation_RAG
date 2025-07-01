@@ -5,11 +5,24 @@ Supabase에 직접 연결해서 notification_query 컬럼을 추가하는 스크
 
 import psycopg2
 import os
+import yaml
 from urllib.parse import urlparse
 
-# Supabase 연결 정보
-SUPABASE_URL = "https://gtlxkigxfmlslvapgofz.supabase.co"
-SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0bHhraWd4Zm1sc2x2YXBnb2Z6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyNDI5NTMsImV4cCI6MjA2MzgxODk1M30.bxL7mOvUkCXf3ns3sHw7_LBbuqd418kkpcqBJ99qudA"
+# config.yaml에서 설정 로드
+def load_config():
+    config_path = os.path.join(os.path.dirname(__file__), 'config', 'config.yaml')
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            return yaml.safe_load(f)
+    except Exception as e:
+        print(f"config.yaml 로드 실패: {e}")
+        return {}
+
+CONFIG = load_config()
+
+# Supabase 연결 정보 (환경 변수 우선, config.yaml 백업)
+SUPABASE_URL = os.environ.get('SUPABASE_URL') or CONFIG.get('SUPABASE_URL', "<your-supabase-url>")
+SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY') or CONFIG.get('SUPABASE_ANON_KEY', "<your-supabase-anon-key>")
 
 # Supabase URL에서 호스트 정보 추출
 parsed_url = urlparse(SUPABASE_URL)
@@ -24,10 +37,10 @@ def add_notification_query_column():
     
     # Supabase PostgreSQL 연결 정보
     # 실제 값들은 Supabase 대시보드 > Settings > Database에서 확인
-    db_host = "db.gtlxkigxfmlslvapgofz.supabase.co"
+    db_host = os.environ.get('SUPABASE_DB_HOST') or "<your-supabase-db-host>"
     db_name = "postgres"
     db_user = "postgres"
-    db_password = "your-db-password"  # 실제 비밀번호 필요
+    db_password = os.environ.get('SUPABASE_DB_PASSWORD') or "<your-supabase-db-password>"  # 실제 비밀번호 필요
     
     try:
         # PostgreSQL 연결

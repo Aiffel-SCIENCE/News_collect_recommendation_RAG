@@ -1,60 +1,80 @@
-# MongoDB 설정 (환경 변수에서 로드됨)
-# MONGO_URI: 환경 변수에서 로드
-# DART_API_KEY: 환경 변수에서 로드
-# NAVER_CLIENT_ID: 환경 변수에서 로드
-# NAVER_CLIENT_SECRET: 환경 변수에서 로드
-
+# Redis 설정
 REDIS_HOST: "redis"
 REDIS_PORT: 6379
 REDIS_DB: 0
 REDIS_BLOCK_TIMEOUT: 30
 
-RAW_DATA_PATH: "data/raw"
+# MongoDB 설정
+MONGO_URI: "mongodb+srv://<username>:<password>@<host>/<dbname>"
 MONGO_DB_NAME: "newsdb"
 MONGO_ARTICLES_COLLECTION_NAME: "articles"
 MONGO_BLACKLIST_COLLECTION_NAME: "Filter3"
 
+# OpenAI 설정
+OPENAI_API_KEY: "<your-openai-api-key>"
 OPENAI_MODEL_NAME: "gpt-4.1-nano"
+OPENAI_RAG_MODEL: "gpt-4.1"
 OPENAI_KEYWORD_MODEL: "gpt-4.1-nano"
-OPENAI_RAG_MODEL: "gpt-4.1-nano"
+OPENAI_LLM_EXTRACTION_MODEL: "gpt-4.1-nano"
 OPENAI_WEB_SEARCH_MODEL: "gpt-4.1-nano"
 OPENAI_ANALYSIS_MODEL: "gpt-4.1-nano"
-OPENAI_LLM_EXTRACTION_MODEL: "gpt-4.1-nano"
 OPENAI_LLM_SUMMARY_MODEL: "gpt-4.1-nano"
 
-# Reranker 설정
-RERANKER_MODEL_NAME: "Qwen/Qwen3-Reranker-0.6B"
-RERANKER_TOP_K: 3
-DENSE_RETRIEVAL_TOP_K: 5
-
-# Pinecone 설정 (API 키는 환경 변수에서 로드됨)
-# PINECONE_API_KEY: 환경 변수에서 로드
+# Pinecone 설정
+PINECONE_API_KEY: "<your-pinecone-api-key>"
 PINECONE_ENVIRONMENT: "us-east-1"
-PINECONE_INDEX_NAME: "news-embedding-2"
-PINECONE_CONTENT_MAX_LENGTH: 20000
-PINECONE_DIMENSION: 512
+PINECONE_INDEX_NAME: "news-embedding-3"
 
+# Supabase 설정
+SUPABASE_URL: "<your-supabase-url>"
+SUPABASE_ANON_KEY: "<your-supabase-anon-key>"
+SUPABASE_SERVICE_ROLE_KEY: "<your-supabase-service-role-key>"
+
+# API 설정
+API_URL: "http://llm-api:8000/query"
+NEWS_ARTICLES_API_SERVER_HOST: "0.0.0.0"
+NEWS_ARTICLES_API_SERVER_PORT: 8002
+NEWS_RECOMMENDATION_API_URL: "http://news-recommendation-api:8001"
+NEWS_REC_SERVER_PORT: 8001
+RAG_API_URL: "http://34.61.170.171:8010/rag-chat"
+
+# 외부 API 키들
+DART_API_KEY: "<your-dart-api-key>"
+NAVER_CLIENT_ID: "<your-naver-client-id>"
+NAVER_CLIENT_SECRET: "<your-naver-client-secret>"
+BREVO_API_KEY: "<your-brevo-api-key>"
+
+# RAG 설정
 RAG_NUM_RETRIEVED_DOCS: 3
 RAG_MIN_SIMILARITY_SCORE: 0.0
-SIMILARITY_THRESHOLD_CONTENT: 0.91
-
-FILTER2_MODEL_DIR: "src/filter2/models"
 SHARED_EMBEDDING_MODEL_NAME: "text-embedding-3-small"
+SIMILARITY_THRESHOLD_CONTENT: 0.91
+PINECONE_CONTENT_MAX_LENGTH: 20000
 
+# 모델 설정
+FILTER2_MODEL_DIR: "src/filter2/models"
+RERANKER_MODEL_NAME: "Qwen/Qwen3-Reranker-0.6B"
+RERANKER_TOP_K: 5
+DENSE_RETRIEVAL_TOP_K: 10
+
+# 큐 설정
 INCOMING_ARTICLES_QUEUE: "incoming_articles_queue"
 
+# Celery 설정
+CELERY_BROKER_URL: "redis://localhost:6379/0"
+CELERY_RESULT_BACKEND: "redis://localhost:6379/0"
+
+# 데이터 경로
+RAW_DATA_PATH: "data/raw"
+
+# 기타 설정
+REPLACEMENT_CHAR: "\ufffd"
+
+# LLM 카테고리화 설정
 LLM_CATEGORIZATION:
   ENABLED: true
   CATEGORIZATION_MODEL: "gpt-4.1-nano"
   MAX_CATEGORIES_PER_DIMENSION: 3
   MAX_INTERNAL_KEYWORDS: 7
-  MAX_SUB_CATS_PER_MAIN_CAT: 3
+  MAX_SUB_CATS_PER_MAIN_CAT: 3   
   MAX_TOTAL_SUB_CATS_PER_ARTICLE: 9
-
-CELERY_BROKER_URL: "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND: "redis://localhost:6379/0"
-API_URL: http://llm-api:8000/query
-
-# Google Custom Search API 설정 (선택사항, 환경 변수에서 로드됨)
-# GOOGLE_API_KEY: 환경 변수에서 로드
-# GOOGLE_CSE_ID: 환경 변수에서 로드

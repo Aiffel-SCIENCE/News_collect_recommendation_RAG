@@ -19,7 +19,7 @@ def test_advanced_retrieval():
     print("="*60)
     
     try:
-        from src.advanced_retrieval import AdvancedRetrieval
+        from src.services.advanced_retrieval import AdvancedRetrieval
         
         # AdvancedRetrieval 인스턴스 생성
         retrieval = AdvancedRetrieval()

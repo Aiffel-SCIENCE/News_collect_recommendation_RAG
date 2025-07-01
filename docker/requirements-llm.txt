@@ -1,3 +1,6 @@
+# 기본 패키지들
+-r requirements-base.txt
+
 # OpenAI 및 LangChain
 openai>=1.0.0
 langchain>=0.1.0

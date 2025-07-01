@@ -9,7 +9,7 @@ from datetime import datetime
 
 # .env 파일 로드
 from dotenv import load_dotenv
-load_dotenv(dotenv_path="/home/br631533333333_gmail_com/Aigen_science/.env")
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '..', '.env'))
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -68,7 +68,12 @@ app = FastAPI(
 
 # --- CORS 미들웨어 추가 ---
 origins = [
-    "http://localhost", "http://localhost:3000", "http://localhost:8080", "http://127.0.0.1:3000",    "http://34.61.170.171:3000", "http://34.61.170.171:3000/ko"
+    "http://localhost", 
+    "http://localhost:3000", 
+    "http://localhost:8080", 
+    "http://127.0.0.1:3000",
+    os.environ.get('FRONTEND_URL', 'http://localhost:3000'),
+    os.environ.get('FRONTEND_URL', 'http://localhost:3000') + '/ko'
 ]
 app.add_middleware(
     CORSMiddleware,

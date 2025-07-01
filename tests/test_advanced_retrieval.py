@@ -14,7 +14,7 @@ def test_advanced_retrieval():
     print("Advanced Retrieval 시스템 테스트 시작")
     
     try:
-        from src.advanced_retrieval import AdvancedRetrieval
+        from src.services.advanced_retrieval import AdvancedRetrieval
         
         # AdvancedRetrieval 인스턴스 생성
         print("AdvancedRetrieval 인스턴스 생성 중...")
@@ -45,7 +45,7 @@ def test_chunking():
     print("="*50)
     
     try:
-        from src.advanced_retrieval import AdvancedRetrieval
+        from src.services.advanced_retrieval import AdvancedRetrieval
         
         retrieval = AdvancedRetrieval()
         

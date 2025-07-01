@@ -6,10 +6,11 @@
 import requests
 import json
 import time
+import os
 from typing import Dict, Any
 
 # 프로덕션 서버 설정
-PRODUCTION_HOST = "34.61.170.171"
+PRODUCTION_HOST = os.environ.get('PRODUCTION_HOST', 'localhost')
 
 def test_api_connection(url: str, name: str) -> Dict[str, Any]:
     """API 연결 상태를 테스트합니다."""
@@ -213,7 +214,7 @@ def main():
     if successful_connections < len(connection_results):
         print("\n🔧 문제 해결 가이드:")
         print("1. 서버에서 Docker 서비스가 실행 중인지 확인:")
-        print("   ssh [사용자명]@34.61.170.171")
+        print(f"   ssh [사용자명]@{PRODUCTION_HOST}")
         print("   docker-compose ps")
         print("2. 서비스 재시작:")
         print("   docker-compose restart")

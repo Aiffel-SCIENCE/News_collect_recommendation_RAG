@@ -17,14 +17,15 @@ class Redis:
         if not self.incoming_articles_queue_name:
             print("CRITICAL WARNING (redis.py): INCOMING_ARTICLES_QUEUE가 config.yaml에 정의되지 않았거나 비어있습니다.")
 
+        # Redis MQ 채널들을 하드코딩된 값으로 설정
         self.channels = {
-            "raw": SETTINGS.get("REDIS_MQ_CHANNEL_RAW"),
-            "pre_checked": SETTINGS.get("REDIS_MQ_CHANNEL_PRE_CHECKED"),
-            "processed": SETTINGS.get("REDIS_MQ_CHANNEL_PROCESSED"),
-            "filter1_passed": SETTINGS.get("REDIS_MQ_CHANNEL_FILTER1_PASSED"),
-            "filter2_passed": SETTINGS.get("REDIS_MQ_CHANNEL_FILTER2_PASSED"),
-            "embedding_processed": SETTINGS.get("REDIS_MQ_CHANNEL_EMBEDDING"),
-            "filter3_passed": SETTINGS.get("REDIS_MQ_CHANNEL_FILTER3_PASSED"),
+            "raw": "raw_articles",
+            "pre_checked": "pre_checked_articles",
+            "processed": "processed_articles",
+            "filter1_passed": "filter1_passed_articles",
+            "filter2_passed": "filter2_passed_articles",
+            "embedding_processed": "embedding_processed_articles",
+            "filter3_passed": "filter3_passed_articles",
         }
 
     def connect_client(self):

@@ -4,18 +4,95 @@
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # 데이터 파일
 data/raw/
+data/embeddings/
+logs/
 
-# 환경 변수 파일 (민감한 정보 포함)
+# 환경 변수 및 설정 파일
 .env
 .env.local
-.env.production
+.env.development.local
+.env.test.local
+.env.production.local
+config/config.yaml
 
-# 기타 IDE 설정 등 (선택사항)
+# IDE 설정
 .vscode/
-config/config.yaml
-.env.backup
-config/config.yaml
-.env
+.idea/
+*.swp
+*.swo
+*~
+
+# 로그 파일
+*.log
+logs/
+
+# 임시 파일
+*.tmp
+*.temp
+
+# 데이터베이스
+*.db
+*.sqlite
+*.sqlite3
+
+# 캐시
+.cache/
+__pycache__/
+
+# 테스트 커버리지
+.coverage
+htmlcov/
+
+# Jupyter Notebook 체크포인트
+.ipynb_checkpoints/
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# pytest
+.pytest_cache/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Docker
+.dockerignore
+
+# Node.js (frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini

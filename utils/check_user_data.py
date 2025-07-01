@@ -5,11 +5,12 @@
 
 from supabase import create_client, Client
 import json
+import os
 from datetime import datetime
 
 # Supabase 설정
-url: str = "https://gtlxkigxfmlslvapgofz.supabase.co"
-key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0bHhraWd4Zm1sc2x2YXBnb2Z6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyNDI5NTMsImV4cCI6MjA2MzgxODk1M30.bxL7mOvUkCXf3ns3sHw7_LBbuqd418kkpcqBJ99qudA"
+url: str = os.environ.get('SUPABASE_URL', '<your-supabase-url>')
+key: str = os.environ.get('SUPABASE_ANON_KEY', '<your-supabase-anon-key>')
 supabase: Client = create_client(url, key)
 
 def check_all_users():

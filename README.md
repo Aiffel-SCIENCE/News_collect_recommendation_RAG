@@ -48,7 +48,6 @@ LLM과 RAG(Retrieval-Augmented Generation) 구조를 활용하여 사용자가 �
 - **GPU 지원**: CUDA 기반 AI 모델 가속
 
 ---
-
 ## 🗂 폴더 구조
 
 ```
@@ -61,8 +60,8 @@ Aigen_science/
 ├── data/                             # 수집된 데이터
 │   └── data.txt                     # 데이터 파일
 ├── database/                         # 데이터베이스 스키마
-│   ├── create_rag_tables.sql
-│   └── create_workspace.sql
+│   ├── create_rag_tables.sql        # RAG 테이블 생성 스크립트
+│   └── create_workspace.sql         # 워크스페이스 테이블 생성 스크립트
 ├── docker/                           # Docker 설정
 │   ├── docker-compose.yml           # 멀티 컨테이너 설정
 │   ├── Dockerfile                   # 각 서비스별 Dockerfile
@@ -84,26 +83,23 @@ Aigen_science/
 ├── notebooks/                        # Jupyter 노트북
 │   └── exploratory_analysis.ipynb
 ├── scripts/                          # 유틸리티 스크립트
-│   ├── deploy.sh
-│   ├── fix_notification_query.js
-│   ├── notification-system.service
-│   ├── start_notification_system.sh
-│   └── upodate_embeddings.py
+│   ├── deploy.sh                    # 배포 스크립트
+│   ├── fix_notification_query.js    # 알림 쿼리 수정 스크립트
+│   ├── notification-system.service  # 알림 시스템 서비스
+│   ├── start_notification_system.sh # 알림 시스템 시작 스크립트
+│   └── upodate_embeddings.py        # 임베딩 업데이트 스크립트
 ├── src/                              # 핵심 소스 코드
 │   ├── __init__.py
 │   ├── celery_app.py                # Celery 애플리케이션 및 태스크 정의
 │   ├── config_loader/               # 설정 로더
 │   │   ├── __init__.py
-│   │   ├── redis.py
-│   │   └── settings.py
+│   │   ├── redis.py                 # Redis 설정
+│   │   └── settings.py              # 환경 설정
 │   ├── db/                          # 데이터베이스 인터페이스
 │   │   └── vector_db.py             # Pinecone 벡터 DB 관리
 │   ├── news_collector/              # 뉴스 수집기
 │   │   ├── __init__.py
-│   │   ├── news_collector.py        # RSS, API 크롤러
-│   │   └── sources/                 # 뉴스 소스 목록
-│   │       ├── api_sources.txt
-│   │       └── rss_sources.txt
+│   │   └── news_collector.py        # RSS, API 크롤러
 │   ├── pipeline_stages/             # Celery 파이프라인 단계
 │   │   ├── __init__.py
 │   │   ├── initial_checks.py        # 1단계: 초기 유효성 검사
@@ -130,30 +126,36 @@ Aigen_science/
 │   │   ├── rag_api.py               # RAG 쿼리 API
 │   │   ├── pdf_api.py               # PDF 처리 API
 │   │   └── web_interface.py         # 웹 인터페이스
-│   ├── api/                         # API 엔드포인트
-│   │   └── Dockerfile
+│   ├── api/                         # 테스트용 API 서버
+│   │   ├── main.py                  # 간단한 쿼리 처리 API
+│   │   └── Dockerfile               # API 서버용 Docker 설정
 │   └── sources/                     # 외부 소스 설정
+│       ├── api_sources.txt          # API 뉴스 소스 목록
+│       └── rss_sources.txt          # RSS 뉴스 소스 목록
 ├── supabase/                        # Supabase 설정
 │   ├── config.toml
 │   ├── migrations/                  # 데이터베이스 마이그레이션
 │   └── seed.sql
 ├── tests/                           # 테스트 코드
-│   ├── main_test.py
-│   ├── test_advanced_retrieval.py
-│   ├── test_filter1.py
-│   ├── test_langgraph.py
-│   ├── test_news_collector.py
-│   ├── test_news_system.py
-│   ├── test_pdf_processor.py
-│   ├── test_processor.py
-│   ├── test_push_article.py
-│   └── test_simple_notification.py
+│   ├── main_test.py                 # 메인 테스트
+│   ├── test_advanced_retrieval.py   # 고급 검색 테스트
+│   ├── test_filter1.py              # 필터1 테스트
+│   ├── test_langgraph.py            # LangGraph 테스트
+│   ├── test_news_collector.py       # 뉴스 수집기 테스트
+│   ├── test_news_system.py          # 뉴스 시스템 테스트
+│   ├── test_news_system_production.py # 프로덕션 뉴스 시스템 테스트
+│   ├── test_pdf_processor.py        # PDF 처리 테스트
+│   ├── test_processor.py            # 프로세서 테스트
+│   ├── test_processor_local.py      # 로컬 프로세서 테스트
+│   ├── test_push_article.py         # 기사 푸시 테스트
+│   └── test_simple_notification.py  # 알림 시스템 테스트
 └── utils/                           # 유틸리티 스크립트
-    ├── add_notification_query_column.py
-    ├── check_user_data.py
-    ├── install_gpu_driver.py
-    └── simple_notification_system.py
+    ├── add_notification_query_column.py # 알림 쿼리 컬럼 추가
+    ├── check_user_data.py           # 사용자 데이터 확인
+    ├── install_gpu_driver.py        # GPU 드라이버 설치
+    └── simple_notification_system.py # 간단한 알림 시스템
 ```
+
 
 ---
 

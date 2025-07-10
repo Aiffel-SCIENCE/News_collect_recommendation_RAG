@@ -6,7 +6,7 @@ LLM과 RAG(Retrieval-Augmented Generation) 구조를 활용하여 사용자가 �
 ---
 ## 아키텍처
 
-(./Architecture.png)
+![Architecture](./Architecture.png)
 
 ---
 ## 주요 기능
